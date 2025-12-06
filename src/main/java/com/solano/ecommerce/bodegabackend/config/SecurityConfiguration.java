@@ -24,7 +24,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilitar CSRF (no necesario en APIs REST stateless)
                 .authorizeHttpRequests(auth -> auth
                         // RUTAS PÚBLICAS (Todos pueden entrar)
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         // RUTAS PRIVADAS (Todo lo demás requiere Token)
                         .anyRequest().authenticated()
                 )

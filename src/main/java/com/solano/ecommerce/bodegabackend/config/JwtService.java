@@ -19,11 +19,11 @@ import java.util.function.Function;
 public class JwtService {
     // Esta es una clave secreta generada aleatoriamente (256 bits)
     @Value("${jwt.secret}")
-    private static final String SECRET_KEY = "";
+    private String SECRET_KEY;
 
     // Token válido por 24 horas
     @Value("${jwt.expirationMs}")
-    private static final Long EXPIRATION_TIME = 1000L;
+    private Long EXPIRATION_TIME;
 
     // Generar token solo con user details
     public String generateToken(UserDetails userDetails) {
