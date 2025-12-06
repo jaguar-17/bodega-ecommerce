@@ -1,5 +1,7 @@
 package com.solano.ecommerce.bodegabackend.model;
 
+import com.solano.ecommerce.bodegabackend.model.enums.DeliveryMethod;
+import com.solano.ecommerce.bodegabackend.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +29,7 @@ public class Order {
 
     @CreationTimestamp
     @JoinColumn(name = "create_at", nullable = false, updatable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

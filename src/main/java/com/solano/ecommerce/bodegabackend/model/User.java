@@ -1,5 +1,7 @@
 package com.solano.ecommerce.bodegabackend.model;
 
+import com.solano.ecommerce.bodegabackend.model.enums.AuthProvider;
+import com.solano.ecommerce.bodegabackend.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.solano.ecommerce.bodegabackend.model;
+package com.solano.ecommerce.bodegabackend.model.enums;
 
 public enum DeliveryMethod {
     PICKUP, // RETIRO EN TIENDA

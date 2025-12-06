@@ -1,4 +1,4 @@
-package com.solano.ecommerce.bodegabackend.model;
+package com.solano.ecommerce.bodegabackend.model.enums;
 
 public enum OrderStatus {
     PENDING_PAYMENT,    // Cliente creó pedido, falta subir foto Yape
