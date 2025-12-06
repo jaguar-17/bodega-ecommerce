@@ -14,7 +14,12 @@ public class CategoryProductService {
     private final CategoryProductRepository categoryProductRepository;
 
     public CategoryProduct createCategoryProduct(CategoryProductRequest request) {
+        Long siguienteNumero = categoryProductRepository.getNextCodigoSecuencial();
+
+        String code = String.format("CATP%06d", siguienteNumero);
+
         CategoryProduct categoryProduct = CategoryProduct.builder()
+                .code(code)
                 .name(request.getName())
                 .build();
         return categoryProductRepository.save(categoryProduct);

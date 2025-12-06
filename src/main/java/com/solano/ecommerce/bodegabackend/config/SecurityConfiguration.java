@@ -26,7 +26,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         // RUTAS PÚBLICAS (Todos pueden entrar)
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/{id}").permitAll()
                         // RUTAS PRIVADAS (Todo lo demás requiere Token)
                         .anyRequest().authenticated()
                 )
