@@ -1,10 +1,22 @@
-HELP.md
+# ========================
+#   GLOBAL / SISTEMA
+# ========================
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+
+# ========================
+#   BACKEND (Spring Boot)
+# ========================
 target/
-.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.class
 
-### STS ###
+# IDEs de Java
 .apt_generated
 .classpath
 .factorypath
@@ -12,22 +24,34 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# ========================
+#   FRONTEND (Node/Angular/React)
+# ========================
+# ¡VITAL! Nunca subir las dependencias
+node_modules/
+
+# Carpetas de compilación (Production build)
+dist/
+build/
+out/
+
+# Caches y logs de NPM/Yarn
+.npm
+yarn-error.log
+package-lock.json # Opcional: Algunos prefieren subirlo, otros no. Generalmente SÍ se sube.
+
+# ========================
+#   VS CODE (General)
+# ========================
 .vscode/
+*.code-workspace
