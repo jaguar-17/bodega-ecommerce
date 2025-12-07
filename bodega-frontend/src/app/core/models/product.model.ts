@@ -8,3 +8,8 @@ export interface Product {
   categoryId: number;
   active: boolean;
 }
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}

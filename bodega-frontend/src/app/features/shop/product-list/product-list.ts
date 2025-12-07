@@ -2,6 +2,7 @@ import {Component, inject, signal} from '@angular/core';
 import {ProductService} from '../../../core/services/product.service';
 import {Product} from '../../../core/models/product.model';
 import {CurrencyPipe} from '@angular/common';
+import {CartService} from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -13,6 +14,7 @@ import {CurrencyPipe} from '@angular/common';
 })
 export class ProductList {
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
 
   products = signal<Product[]>([]);
   loading = signal<boolean>(true);
@@ -35,7 +37,6 @@ export class ProductList {
   }
 
   addToCart(product: Product) {
-    console.log(`Agregando al carrito: ${product.name}`);
-    alert(`Agregaste ${product.name} al carrito!`);
+    this.cartService.addToCart(product);
   }
 }
