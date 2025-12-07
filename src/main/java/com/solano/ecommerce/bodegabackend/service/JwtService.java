@@ -1,4 +1,4 @@
-package com.solano.ecommerce.bodegabackend.config;
+package com.solano.ecommerce.bodegabackend.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

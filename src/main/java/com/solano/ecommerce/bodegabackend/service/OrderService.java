@@ -15,6 +15,7 @@ import com.solano.ecommerce.bodegabackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +28,33 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService;
+
+    // Configurar Pago
+    public OrderResponse uploadPaymentProof(Long orderId, String userEmail, MultipartFile file) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Orden con ID: " + orderId + " no encontrada."));
+
+        // Verificar que la orden pertenece al usuario
+        if (!order.getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("No tienes permiso para subir el comprobante de pago de esta orden.");
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING_PAYMENT) {
+            throw new RuntimeException("Esta orden ya no está pendiente de pago.");
+        }
+
+        // Subir el comprobante a Cloudinary
+        String imageUrl = cloudinaryService.upload(file, "comprobantes-pagos");
+
+        // Actualizar la orden con el URL del comprobante y cambiar el estado
+        order.setPaymentProofUrl(imageUrl);
+        order.setStatus(OrderStatus.VERIFYING_PAYMENT);
+
+        Order savedOrder = orderRepository.save(order);
+
+        return mapToOrderResponse(savedOrder);
+    }
 
     @Transactional
     public OrderResponse createOrder(String userEmail, OrderRequest request) {

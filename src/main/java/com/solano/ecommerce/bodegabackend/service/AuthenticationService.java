@@ -1,6 +1,5 @@
 package com.solano.ecommerce.bodegabackend.service;
 
-import com.solano.ecommerce.bodegabackend.config.JwtService;
 import com.solano.ecommerce.bodegabackend.dto.request.AuthenticationRequest;
 import com.solano.ecommerce.bodegabackend.dto.request.RegisterRequest;
 import com.solano.ecommerce.bodegabackend.dto.response.AuthenticationResponse;

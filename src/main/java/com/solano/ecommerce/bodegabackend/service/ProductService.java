@@ -8,6 +8,7 @@ import com.solano.ecommerce.bodegabackend.repository.CategoryProductRepository;
 import com.solano.ecommerce.bodegabackend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +18,9 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryProductRepository categoryProductRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public ProductResponse createProduct(ProductRequest request) {
+    public ProductResponse createProduct(ProductRequest request, MultipartFile file) {
         Long siguienteNumero = productRepository.getNextCodigoSecuencial();
 
         String code = String.format("PROD%06d", siguienteNumero);
@@ -27,12 +29,18 @@ public class ProductService {
                 () -> new RuntimeException("Categoria con: " + request.getCategoryId() + " no encontrado")
         );
 
+        String imageUrl = "";
+
+        if (file != null && !file.isEmpty()) {
+            imageUrl = cloudinaryService.upload(file, "productos-imagenes");
+        }
+
         Product product = Product.builder()
                 .code(code)
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .imageUrl(request.getImageUrl())
+                .imageUrl(imageUrl)
                 .category(category)
                 .active(true)
                 .build();
@@ -61,7 +69,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse updateProduct(Long id, ProductRequest request) {
+    public ProductResponse updateProduct(Long id, ProductRequest request, MultipartFile file) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto con: " + id + " no encontrado"));
 
@@ -72,8 +80,18 @@ public class ProductService {
         existingProduct.setName(request.getName());
         existingProduct.setDescription(request.getDescription());
         existingProduct.setPrice(request.getPrice());
-        existingProduct.setImageUrl(request.getImageUrl());
         existingProduct.setCategory(category);
+
+        if (file != null && !file.isEmpty()) {
+            if (existingProduct.getImageUrl() != null && !existingProduct.getImageUrl().isEmpty()) {
+                String publicId = cloudinaryService.getPublicId(existingProduct.getImageUrl());
+                if (publicId != null) {
+                    cloudinaryService.delete(publicId);
+                }
+            }
+            String newImageUrl = cloudinaryService.upload(file, "productos-imagenes");
+            existingProduct.setImageUrl(newImageUrl);
+        }
 
         Product savedProduct = productRepository.save(existingProduct);
 

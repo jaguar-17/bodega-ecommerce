@@ -1,5 +1,6 @@
 package com.solano.ecommerce.bodegabackend.config;
 
+import com.solano.ecommerce.bodegabackend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

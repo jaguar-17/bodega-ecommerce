@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,6 +22,16 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok(orderService.createOrder(email, request));
+    }
+
+    // Endpoint: Confirmar pago subiendo el comprobante
+    @PostMapping("/{id}/confirm-payment")
+    public ResponseEntity<OrderResponse> confirmPayment(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(orderService.uploadPaymentProof(id, email, file));
     }
 
     // Endpoint: Obtener las órdenes del usuario autenticado

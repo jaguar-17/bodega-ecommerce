@@ -4,9 +4,11 @@ import com.solano.ecommerce.bodegabackend.dto.request.ProductRequest;
 import com.solano.ecommerce.bodegabackend.dto.response.ProductResponse;
 import com.solano.ecommerce.bodegabackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,16 +41,23 @@ public class ProductController {
 
     // Endpoint: Crear un nuevo producto
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
-        return ResponseEntity.ok(productService.createProduct(request));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> createProduct(
+            @RequestPart("product") ProductRequest request,
+            @RequestPart(value = "imageUrl", required = false) MultipartFile file
+    ) {
+        return ResponseEntity.ok(productService.createProduct(request, file));
     }
 
     // Endpoint: Actualizar un producto existente
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
-        return ResponseEntity.ok(productService.updateProduct(id, request));
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("product") ProductRequest request,
+            @RequestPart(value = "imageUrl", required = false) MultipartFile file
+    ) {
+        return ResponseEntity.ok(productService.updateProduct(id, request, file));
     }
 
     // Endpoint: Actualizar el estado activo/inactivo de un producto
