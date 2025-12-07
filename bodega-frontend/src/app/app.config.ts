@@ -1,12 +1,31 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+  LOCALE_ID,
+  DEFAULT_CURRENCY_CODE
+} from '@angular/core';
+import {provideRouter} from '@angular/router';
 
-import { routes } from './app.routes';
+import {routes} from './app.routes';
+
+import {provideHttpClient} from '@angular/common/http';
+
+// IMPORTACIONES DE IDIOMA Y MONEDA
+import localeEsPe from '@angular/common/locales/es-PE';
+import {registerLocaleData} from '@angular/common';
+
+// REGISTRAR EL IDIOMA
+registerLocaleData(localeEsPe, 'es-PE');
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
+    provideZoneChangeDetection({eventCoalescing: true}),
+    provideRouter(routes),
+    provideHttpClient(),
+    // CONFIGURAR EL IDIOMA Y MONEDA POR DEFECTO
+    {provide: LOCALE_ID, useValue: 'es-PE'},
+    {provide: DEFAULT_CURRENCY_CODE, useValue: 'PEN'},
   ]
 };
