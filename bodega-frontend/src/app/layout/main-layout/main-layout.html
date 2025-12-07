@@ -1,0 +1,30 @@
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+
+    <a routerLink="/" class="text-2xl font-black text-blue-600 tracking-tighter">
+      MiBodega<span class="text-yellow-500">.</span>
+    </a>
+
+    <div class="flex items-center gap-4">
+      @if (isAuthenticated()) {
+        <span class="text-sm text-gray-600 hidden md:inline">Hola, Cliente</span>
+        <button (click)="logout()" class="text-sm font-medium text-red-500 hover:text-red-700">
+          Salir
+        </button>
+      } @else {
+        <a routerLink="/auth/login" class="text-sm font-medium text-gray-600 hover:text-blue-600">
+          Iniciar Sesión
+        </a>
+        <a routerLink="/auth/register"
+           class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition">
+          Registrarse
+        </a>
+      }
+    </div>
+
+  </div>
+</header>
+
+<main class="bg-gray-50 min-h-screen">
+  <router-outlet></router-outlet>
+</main>

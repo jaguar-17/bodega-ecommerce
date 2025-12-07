@@ -1,0 +1,64 @@
+<div class="container mx-auto px-4 py-8">
+
+  <h1 class="text-3xl font-bold text-gray-800 mb-8">Nuestros Productos 🥑</h1>
+
+  @if (loading()) {
+    <div class="text-center py-10">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      <p class="mt-4 text-gray-500">Cargando catálogo...</p>
+    </div>
+  }
+
+  @if (!loading()) {
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      @for (product of products(); track product.id) {
+        <div
+          class="bg-white rounded-xl shadow-sm hover:shadow-md transition duration-300 border border-gray-100 overflow-hidden flex flex-col">
+
+          <div class="h-48 overflow-hidden bg-gray-50 relative group">
+            <img
+              [src]="product.imageUrl || 'https://dummyimage.com/300x300/e5e7eb/9ca3af?text=Sin+Imagen'"
+              [alt]="product.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            >
+            <span class="absolute top-2 right-2 bg-white/90 px-2 py-1 text-xs font-semibold rounded-full text-gray-600">
+              {{ product.categoryId }}
+            </span>
+          </div>
+
+          <div class="p-4 flex-grow flex flex-col">
+            <h3 class="text-lg font-semibold text-gray-800 line-clamp-2 leading-tight mb-1">
+              {{ product.name }}
+            </h3>
+            <p class="text-sm text-gray-500 mb-4 line-clamp-2">
+              {{ product.description }}
+            </p>
+
+            <div class="mt-auto flex items-center justify-between">
+              <span class="text-xl font-bold text-blue-600">
+                {{ product.price | currency }}
+              </span>
+
+              <button
+                (click)="addToCart(product)"
+                class="bg-blue-100 hover:bg-blue-600 text-blue-700 hover:text-white p-2 rounded-full transition-colors duration-300"
+                title="Agregar al carrito"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                     stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-span-full text-center py-10 bg-gray-50 rounded-lg">
+          <p class="text-gray-500 text-lg">No hay productos disponibles por ahora.</p>
+        </div>
+      }
+
+    </div>
+  }
+</div>
