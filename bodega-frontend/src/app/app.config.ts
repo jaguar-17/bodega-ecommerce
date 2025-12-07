@@ -5,11 +5,11 @@ import {
   LOCALE_ID,
   DEFAULT_CURRENCY_CODE
 } from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {provideRouter, withComponentInputBinding, withViewTransitions} from '@angular/router';
 
 import {routes} from './app.routes';
 
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withFetch} from '@angular/common/http';
 
 // IMPORTACIONES DE IDIOMA Y MONEDA
 import localeEsPe from '@angular/common/locales/es-PE';
@@ -22,8 +22,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({eventCoalescing: true}),
-    provideRouter(routes),
-    provideHttpClient(),
+    provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
+    provideHttpClient(
+      withFetch(),
+      // withInterceptors([authInterceptor]) // JWT INTERCEPTOR
+    ),
     // CONFIGURAR EL IDIOMA Y MONEDA POR DEFECTO
     {provide: LOCALE_ID, useValue: 'es-PE'},
     {provide: DEFAULT_CURRENCY_CODE, useValue: 'PEN'},
