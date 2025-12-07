@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryProductRepository categoryProductRepository;
 
-    public Product createProduct(ProductRequest request) {
+    public ProductResponse createProduct(ProductRequest request) {
         Long siguienteNumero = productRepository.getNextCodigoSecuencial();
 
         String code = String.format("PROD%06d", siguienteNumero);
@@ -35,20 +36,29 @@ public class ProductService {
                 .category(category)
                 .active(true)
                 .build();
-        return productRepository.save(product);
+
+        Product savedProduct = productRepository.save(product);
+        return mapToProductResponse(savedProduct);
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto con: " + id + " no encontrado"));
+        return mapToProductResponse(product);
     }
 
-    public List<Product> getAllActiveProducts() {
-        return productRepository.findByActiveTrue();
+    public List<ProductResponse> getAllActiveProducts() {
+        List<Product> products = productRepository.findByActiveTrue();
+        return products.stream()
+                .map(this::mapToProductResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<Product> getAllProductsForAdmin() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProductsForAdmin() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::mapToProductResponse)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse updateProduct(Long id, ProductRequest request) {
@@ -67,16 +77,17 @@ public class ProductService {
 
         Product savedProduct = productRepository.save(existingProduct);
 
-        return ProductResponse.builder()
-                .id(savedProduct.getId())
-                .code(savedProduct.getCode())
-                .name(savedProduct.getName())
-                .description(savedProduct.getDescription())
-                .price(savedProduct.getPrice())
-                .imageUrl(savedProduct.getImageUrl())
-                .categoryId(savedProduct.getCategory().getId())
-                .active(savedProduct.isActive() ? "Active" : "Inactive")
-                .build();
+        return mapToProductResponse(savedProduct);
+    }
+
+    public ProductResponse updateProductStatus(Long id, boolean isActive) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto con: " + id + " no encontrado"));
+
+        existingProduct.setActive(isActive);
+        Product savedProduct = productRepository.save(existingProduct);
+
+        return mapToProductResponse(savedProduct);
     }
 
     // Soft delete
@@ -85,5 +96,20 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Producto con: " + id + " no encontrado"));
         existingProduct.setActive(false);
         productRepository.save(existingProduct);
+    }
+
+    // --- MÉTODO HELPER PRIVADO (La clave para evitar repetir código) ---
+    private ProductResponse mapToProductResponse(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .code(product.getCode())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .imageUrl(product.getImageUrl())
+                // Aquí es donde evitamos el error del Proxy al sacar solo el ID
+                .categoryId(product.getCategory().getId())
+                .active(product.isActive() ? "Active" : "Inactive")
+                .build();
     }
 }

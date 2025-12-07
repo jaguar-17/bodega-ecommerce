@@ -2,7 +2,6 @@ package com.solano.ecommerce.bodegabackend.controller;
 
 import com.solano.ecommerce.bodegabackend.dto.request.ProductRequest;
 import com.solano.ecommerce.bodegabackend.dto.response.ProductResponse;
-import com.solano.ecommerce.bodegabackend.model.Product;
 import com.solano.ecommerce.bodegabackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,26 +18,26 @@ public class ProductController {
     // ====================== CLIENTE ======================
     // Endpoint: Obtener todos los productos activos
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllActiveProducts());
     }
 
     // Endpoint: Obtener un producto por su ID
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     // ====================== ADMIN ======================
     // Endpoint: Obtener todos los productos (incluyendo inactivos)
     @GetMapping("/admin")
-    public ResponseEntity<List<Product>> getAllProductsForAdmin() {
+    public ResponseEntity<List<ProductResponse>> getAllProductsForAdmin() {
         return ResponseEntity.ok(productService.getAllProductsForAdmin());
     }
 
     // Endpoint: Crear un nuevo producto
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.createProduct(request));
     }
 
@@ -46,6 +45,14 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ProductResponse> updateStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) { // Recibe ?active=true o ?active=false
+
+        return ResponseEntity.ok(productService.updateProductStatus(id, active));
     }
 
     // Endpoint: Eliminar un producto

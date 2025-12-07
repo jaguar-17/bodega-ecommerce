@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "category_products")
 public class CategoryProduct {
     @Id
