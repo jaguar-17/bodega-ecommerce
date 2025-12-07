@@ -5,6 +5,7 @@ import com.solano.ecommerce.bodegabackend.model.CategoryProduct;
 import com.solano.ecommerce.bodegabackend.service.CategoryProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,24 +17,28 @@ public class CategoryProductController {
     private final CategoryProductService categoryProductService;
 
     // Endpoint: Obtener todas las categorías de productos
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<CategoryProduct>> getAllCategoryProducts() {
         return ResponseEntity.ok(categoryProductService.getAllCategoryProducts());
     }
 
     // Endpoint: Crear una nueva categoría de producto
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryProduct> createCategoryProduct(@RequestBody CategoryProductRequest request) {
         return ResponseEntity.ok(categoryProductService.createCategoryProduct(request));
     }
 
     // Endpoint: Actualizar una categoría de producto existente
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryProduct> updateCategoryProduct(@PathVariable Long id, @RequestBody CategoryProductRequest request) {
         return ResponseEntity.ok(categoryProductService.updateCategoryProduct(id, request));
     }
 
     // Endpoint: Eliminar una categoría de producto
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoryProduct(@PathVariable Long id) {
         categoryProductService.deleteCategoryProduct(id);

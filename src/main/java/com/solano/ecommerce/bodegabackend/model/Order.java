@@ -31,7 +31,7 @@ public class Order {
     private User user;
 
     @CreationTimestamp
-    @JoinColumn(name = "create_at", nullable = false, updatable = false)
+    @JoinColumn(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)

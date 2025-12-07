@@ -23,7 +23,7 @@ public class OrderItem {
 
     private BigDecimal price; // Precio al momento de la compra
 
-    private BigDecimal subTotal;
+    private BigDecimal subtotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
