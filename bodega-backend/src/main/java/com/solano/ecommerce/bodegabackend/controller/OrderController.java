@@ -2,9 +2,11 @@ package com.solano.ecommerce.bodegabackend.controller;
 
 import com.solano.ecommerce.bodegabackend.dto.request.OrderRequest;
 import com.solano.ecommerce.bodegabackend.dto.response.OrderResponse;
+import com.solano.ecommerce.bodegabackend.model.enums.OrderStatus;
 import com.solano.ecommerce.bodegabackend.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,5 +41,23 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> getMyOrders() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok(orderService.getUserOrders(email));
+    }
+
+    // ====================== ADMIN ======================
+    // Endpoint: Obtener todas las órdenes
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/admin")
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    // Endpoint: Actualizar el estado de una orden
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PatchMapping("/admin/{id}/status")
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam OrderStatus status
+    ) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 }

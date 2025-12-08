@@ -122,6 +122,24 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAllByOrderByCreatedAtDesc();
+
+        return orders.stream()
+                .map(this::mapToOrderResponse)
+                .collect(Collectors.toList());
+    }
+
+    public OrderResponse updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Orden con ID: " + orderId + " no encontrada."));
+
+        order.setStatus(newStatus);
+        Order updatedOrder = orderRepository.save(order);
+
+        return mapToOrderResponse(updatedOrder);
+    }
+
     // --- MAPPERS  ---
     private OrderResponse mapToOrderResponse(Order order) {
         return OrderResponse.builder()
