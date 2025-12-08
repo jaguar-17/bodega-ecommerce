@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+
+  <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-6">
+
+    @if (!success()) {
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+             class="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+      </div>
+
+      <h2 class="text-2xl font-bold text-gray-800">¡Pedido #{{ id }} Creado!</h2>
+      <p class="text-gray-600">Para finalizar, por favor realiza el pago y sube la captura.</p>
+
+      <div class="bg-purple-600 text-white p-4 rounded-lg mx-auto w-fit">
+        <p class="font-bold text-sm">YAPE / PLIN</p>
+        <p class="text-2xl font-mono tracking-widest my-2">999-888-777</p>
+        <p class="text-xs opacity-80">A nombre de: Mi Bodega SAC</p>
+      </div>
+
+      <div
+        class="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:bg-gray-50 transition cursor-pointer relative">
+        <input type="file" (change)="onFileSelected($event)"
+               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+        <div class="text-gray-500">
+          @if (selectedFile) {
+            <p class="text-blue-600 font-medium">{{ selectedFile.name }}</p>
+          } @else {
+            <p>Toca para subir captura 📸</p>
+          }
+        </div>
+      </div>
+
+      <button
+        (click)="uploadProof()"
+        [disabled]="!selectedFile || uploading()"
+        class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50"
+      >
+        {{ uploading() ? 'Subiendo...' : 'Enviar Comprobante' }}
+      </button>
+
+    } @else {
+      <div class="text-center space-y-4 animate-bounce-in">
+        <div
+          class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto text-white shadow-lg shadow-green-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"
+               class="w-10 h-10">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+          </svg>
+        </div>
+        <h2 class="text-3xl font-black text-gray-800">¡Todo listo!</h2>
+        <p class="text-gray-600">Hemos recibido tu comprobante. Te avisaremos cuando tu pedido esté en camino.</p>
+        <p class="text-sm text-gray-400">Redirigiendo al inicio...</p>
+      </div>
+    }
+
+  </div>
+</div>

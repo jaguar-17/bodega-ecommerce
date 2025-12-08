@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../core/services/auth.service';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +16,25 @@ export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  url: string = "http://localhost:8080/oauth2/authorization/google"
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
+
+  constructor() {
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      if (token) {
+        console.log("Token recibido de Google: ", token);
+        localStorage.setItem('token', token);
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   errorMessage: string = '';
 
