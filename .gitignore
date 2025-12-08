@@ -37,18 +37,21 @@ target/
 # ========================
 #   FRONTEND (Node/Angular/React)
 # ========================
-# ¡VITAL! Nunca subir las dependencias
 node_modules/
 
 # Carpetas de compilación (Production build)
 dist/
 build/
 out/
+/dist
+/tmp
+/out-tsc
+/bazel-out
 
 # Caches y logs de NPM/Yarn
 .npm
+npm-debug.log
 yarn-error.log
-package-lock.json # Opcional: Algunos prefieren subirlo, otros no. Generalmente SÍ se sube.
 
 # ========================
 #   VS CODE (General)
