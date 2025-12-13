@@ -1,0 +1,86 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Panel de Administración 👮‍♂️</h1>
+    <button (click)="loadOrders()" class="text-blue-600 hover:underline">🔄 Actualizar</button>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+    <table class="w-full text-left border-collapse">
+      <thead class="bg-gray-50 border-b">
+      <tr>
+        <th class="p-4 font-semibold text-gray-600">Code</th>
+        <th class="p-4 font-semibold text-gray-600">Cliente</th>
+        <th class="p-4 font-semibold text-gray-600">Método de Entrega</th>
+        <th class="p-4 font-semibold text-gray-600">Total</th>
+        <th class="p-4 font-semibold text-gray-600">Estado</th>
+        <th class="p-4 font-semibold text-gray-600">Prueba de Pago</th>
+        <th class="p-4 font-semibold text-gray-600 text-right">Acciones</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        @for (order of orders(); track order.id) {
+          <tr class="hover:bg-gray-50 transition">
+            <td class="p-4 text-gray-500">{{ order.code }}</td>
+            <td class="p-4 text-gray-500">{{ order.user }}</td>
+            <td class="p-4 text-gray-500">{{ order.deliveryMethod }}</td>
+            <td class="p-4 font-bold text-gray-800">
+              {{ order.totalAmount | currency }}
+            </td>
+            <td class="p-4">
+              <span
+                [class]="'px-2 py-1 rounded-full text-xs font-bold ' + (statusColors[order.status] || 'bg-gray-100')">
+                {{ order.status }}
+              </span>
+            </td>
+            <td class="p-4">
+              @if (order.paymentProofUrl) {
+                <div class="relative group w-12 h-12">
+                  <img [src]="order.paymentProofUrl" class="w-full h-full object-cover rounded border cursor-pointer"
+                       alt="">
+                  <div
+                    class="absolute hidden group-hover:block z-50 bottom-full left-0 mb-2 w-48 bg-white p-1 shadow-xl rounded border">
+                    <img [src]="order.paymentProofUrl" class="w-full h-auto" alt="">
+                    <a [href]="order.paymentProofUrl" target="_blank"
+                       class="block text-center text-xs text-blue-500 mt-1">Ver original</a>
+                  </div>
+                </div>
+              } @else {
+                <span class="text-xs text-gray-400 italic">Sin foto</span>
+              }
+            </td>
+            <td class="p-4 text-right space-x-2">
+
+              @if (order.status === 'VERIFYING_PAYMENT') {
+                <button (click)="approvePayment(order)"
+                        class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 shadow">
+                  ✓ Aprobar
+                </button>
+              }
+
+              @if (order.status === 'IN_PREPARATION') {
+                <button (click)="nextStatus(order)"
+                        class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 shadow">
+                  🚀 Enviar
+                </button>
+              }
+
+              @if (order.status === 'ON_WAY' || order.status === 'READY_FOR_PICKUP') {
+                <button (click)="nextStatus(order)"
+                        class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 shadow">
+                  📦 Confirmar Entrega
+                </button>
+              }
+
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="p-8 text-center text-gray-500">No hay pedidos registrados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

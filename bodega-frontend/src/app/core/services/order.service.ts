@@ -23,4 +23,13 @@ export class OrderService {
   getMyOrders(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/my-orders`);
   }
+
+  // ====== Admin ======
+  getAllOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/admin`);
+  }
+
+  updateStatus(id: number, status: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/admin/${id}/status?status=${status}`, {});
+  }
 }
