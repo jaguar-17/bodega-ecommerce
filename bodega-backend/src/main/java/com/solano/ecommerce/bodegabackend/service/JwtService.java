@@ -1,5 +1,6 @@
 package com.solano.ecommerce.bodegabackend.service;
 
+import com.solano.ecommerce.bodegabackend.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -27,7 +28,13 @@ public class JwtService {
 
     // Generar token solo con user details
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        if (userDetails instanceof User customUser) {
+            extraClaims.put("role", customUser.getRole().name());
+            extraClaims.put("fullName", customUser.getFullName());
+        }
+        return generateToken(extraClaims, userDetails);
     }
 
     // Generar token con claims extra (datos adicionales)

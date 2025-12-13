@@ -15,8 +15,4 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     // Obtiene todas las órdenes ordenadas por fecha de creación descendente
     List<Order> findAllByOrderByCreatedAtDesc();
-
-    // Cambiar el estado de una orden por su ID
-    @Query("UPDATE Order o SET o.status = ?2 WHERE o.id = ?1")
-    void updateOrderStatus(Long orderId, String status);
 }

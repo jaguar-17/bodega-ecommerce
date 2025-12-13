@@ -145,6 +145,7 @@ public class OrderService {
         return OrderResponse.builder()
                 .id(order.getId())
                 .code(order.getCode())
+                .user(order.getUser().getFullName())
                 .createdAt(order.getCreatedAt())
                 .status(order.getStatus())
                 .deliveryMethod(order.getDeliveryMethod())
